@@ -1,0 +1,65 @@
+
+
+
+
+
+
+name: Build Docker images
+
+on:
+  # Run every other morning, time chosen arbitrarily as a likely low-activity period.
+  # This will ensure that the images are up to date with releases on their base images.
+  schedule:
+    - cron:  '40 11 * * */2'
+  # Allow manual runs.
+  workflow_dispatch:
+  # Also run on updates to this repo.
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**/*.md'
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '**/*.md'
+  
+env:
+  PLATFORMS: linux/arm/v6,linux/arm/v7,linux/arm64/v8,linux/amd64
+
+jobs:
+
+  build-image:
+    runs-on: ubuntu-latest
+    # continue-on-error: true
+    strategy:
+      matrix:
+        VARIANT: ['apache', 'fpm', 'fpm-alpine']
+
+    steps:
+      - name: Get roundcubemail-docker repo
+        uses: actions/checkout@v2
+        with:
+          repository: roundcube/roundcubemail-docker
+
+      - name: Docker Setup QEMU
+        uses: docker/setup-qemu-action@v1.0.1
+
+      - name: Docker Setup Buildx
+        uses: docker/setup-buildx-action@v1.0.3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push ${{ matrix.VARIANT }} Docker image
+        uses: docker/build-push-action@v2.1.0
+        with:
+          context: ${{ matrix.VARIANT }}
+          file: ${{ matrix.VARIANT }}/Dockerfile
+          tags: florianpiesche/${{ matrix.VARIANT }}-arm:latest
+          platforms: ${{ env.PLATFORMS }}
+          push: true
