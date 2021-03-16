@@ -60,6 +60,6 @@ jobs:
         with:
           context: ${{ matrix.VARIANT }}
           file: ${{ matrix.VARIANT }}/Dockerfile
-          tags: florianpiesche/${{ matrix.VARIANT }}-arm:latest
+          tags: florianpiesche/roundcubemail:${{ matrix.VARIANT }}
           platforms: ${{ env.PLATFORMS }}
           push: true
