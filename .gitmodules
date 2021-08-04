@@ -1,0 +1,3 @@
+[submodule "roundcubemail-docker"]
+	path = roundcubemail-docker
+	url = git@github.com:roundcube/roundcubemail-docker
