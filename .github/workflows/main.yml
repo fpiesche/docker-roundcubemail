@@ -61,8 +61,8 @@ jobs:
           context: roundcubemail-docker/${{ matrix.VARIANT }}
           file: roundcubemail-docker/${{ matrix.VARIANT }}/Dockerfile
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/roundcubemail:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/roundcubemail:${{ env.ROUNDCUBE_VERSION }}
+            ${{ secrets.DOCKERHUB_USERNAME || 'nobody' }}/roundcubemail:latest
+            ${{ secrets.DOCKERHUB_USERNAME || 'nobody' }}/roundcubemail:${{ env.ROUNDCUBE_VERSION }}
             ghcr.io/${{ github.repository_owner }}/roundcubemail:latest
             ghcr.io/${{ github.repository_owner }}/roundcubemail:${{ env.ROUNDCUBE_VERSION }}
           platforms: ${{ env.PLATFORMS }}
