@@ -56,7 +56,7 @@ jobs:
         run: echo "ROUNDCUBE_VERSION=${1:-$(curl -fsS https://roundcube.net/VERSION.txt)}" >> $GITHUB_ENV
 
       - name: Build and push roundcubemail Docker image
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: roundcubemail-docker/${{ matrix.VARIANT }}
           file: roundcubemail-docker/${{ matrix.VARIANT }}/Dockerfile
